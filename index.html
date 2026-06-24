@@ -4,7 +4,310 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cost Manager</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --surface-soft: #edf2f7;
+  --text: #17202a;
+  --muted: #607080;
+  --line: #d7dee8;
+  --accent: #087f8c;
+  --accent-dark: #056671;
+  --danger: #b42318;
+  --shadow: 0 18px 46px rgba(23, 32, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 42px;
+  padding: 0 18px;
+}
+
+button:hover,
+button:focus-visible {
+  background: var(--accent-dark);
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  padding: 0 12px;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent);
+  outline: 3px solid rgba(8, 127, 140, 0.18);
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 13px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  max-height: 330px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 32px clamp(18px, 4vw, 56px);
+  background: #143642;
+  color: #ffffff;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #9bd8df;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.header-total {
+  display: grid;
+  gap: 6px;
+  min-width: 190px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+
+.header-total span {
+  color: #b7ced5;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.header-total strong {
+  font-size: 1.75rem;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.7fr) minmax(420px, 1.3fr);
+  gap: 18px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px clamp(14px, 3vw, 34px) 42px;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.panel-heading h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.panel-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.cost-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 20px;
+}
+
+.cost-form button,
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.report-panel {
+  grid-row: span 2;
+}
+
+.report-heading {
+  align-items: end;
+}
+
+.report-controls {
+  display: grid;
+  grid-template-columns: 150px 110px auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.compact-controls {
+  grid-template-columns: 120px auto;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.amount-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.empty-cell {
+  color: var(--muted);
+  text-align: center;
+}
+
+.chart-panel {
+  min-height: 390px;
+}
+
+.chart-panel canvas {
+  padding: 18px;
+}
+
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 5;
+  border-radius: 8px;
+  background: var(--text);
+  color: #ffffff;
+  padding: 12px 16px;
+  box-shadow: var(--shadow);
+}
+
+.toast.error {
+  background: var(--danger);
+}
+
+@media (max-width: 880px) {
+  .app-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .header-total {
+    min-width: 0;
+  }
+
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .report-panel {
+    grid-row: auto;
+  }
+
+  .report-heading,
+  .report-controls {
+    align-items: stretch;
+  }
+
+  .report-heading {
+    flex-direction: column;
+  }
+
+  .report-controls {
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .report-controls button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 540px) {
+  .cost-form,
+  .report-controls,
+  .compact-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .cost-form button,
+  .report-controls button {
+    grid-column: auto;
+  }
+
+  th,
+  td {
+    padding: 11px 9px;
+  }
+}
+  </style>
 </head>
 <body>
   <header class="app-header">
@@ -138,6 +441,276 @@
   </main>
 
   <script src="db.js"></script>
-  <script src="app.js"></script>
+  <script>
+(function() {
+  "use strict";
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ];
+
+  const chartColors = [
+    "#087f8c",
+    "#f25f5c",
+    "#247ba0",
+    "#70c1b3",
+    "#ffb703",
+    "#5e548e",
+    "#2a9d8f",
+    "#e76f51",
+    "#577590"
+  ];
+
+  const database = window.db.openCostsDB("costsdb", 1);
+  const today = new Date();
+
+  const costForm = document.getElementById("costForm");
+  const reportForm = document.getElementById("reportForm");
+  const yearForm = document.getElementById("yearForm");
+  const tableBody = document.getElementById("costTableBody");
+  const monthInput = document.getElementById("monthInput");
+  const yearInput = document.getElementById("yearInput");
+  const barYearInput = document.getElementById("barYearInput");
+  const reportSummary = document.getElementById("reportSummary");
+  const yearSummary = document.getElementById("yearSummary");
+  const currentMonthTotal = document.getElementById("currentMonthTotal");
+  const categoryChart = document.getElementById("categoryChart");
+  const yearChart = document.getElementById("yearChart");
+
+  monthInput.value = String(today.getMonth() + 1);
+  yearInput.value = String(today.getFullYear());
+  barYearInput.value = String(today.getFullYear());
+
+  // Native currency formatting keeps every amount consistent with the USD requirement.
+  function formatMoney(value) {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD"
+    }).format(value);
+  }
+
+  function showToast(message, type) {
+    const toast = document.createElement("div");
+    toast.className = "toast" + (type === "error" ? " error" : "");
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    window.setTimeout(function() {
+      toast.remove();
+    }, 2400);
+  }
+
+  function getCategoryTotals(costs) {
+    return costs.reduce(function(groups, cost) {
+      groups[cost.category] = (groups[cost.category] || 0) + Number(cost.sum);
+      return groups;
+    }, {});
+  }
+
+  function renderTable(report) {
+    tableBody.innerHTML = "";
+
+    if (report.costs.length === 0) {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+
+      cell.colSpan = 4;
+      cell.className = "empty-cell";
+      cell.textContent = "No costs for this month yet.";
+      row.appendChild(cell);
+      tableBody.appendChild(row);
+      return;
+    }
+
+    report.costs.forEach(function(cost) {
+      const row = document.createElement("tr");
+      const dayCell = document.createElement("td");
+      const categoryCell = document.createElement("td");
+      const descriptionCell = document.createElement("td");
+      const amountCell = document.createElement("td");
+
+      dayCell.textContent = cost.date.day;
+      categoryCell.textContent = cost.category;
+      descriptionCell.textContent = cost.description;
+      amountCell.className = "amount-cell";
+      amountCell.textContent = formatMoney(cost.sum);
+
+      row.appendChild(dayCell);
+      row.appendChild(categoryCell);
+      row.appendChild(descriptionCell);
+      row.appendChild(amountCell);
+      tableBody.appendChild(row);
+    });
+  }
+
+  function clearCanvas(canvas) {
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    return context;
+  }
+
+  function drawEmptyChart(canvas, message) {
+    const context = clearCanvas(canvas);
+
+    context.fillStyle = "#607080";
+    context.font = "16px Arial";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(message, canvas.width / 2, canvas.height / 2);
+  }
+
+  function drawCategoryChart(report) {
+    const totals = getCategoryTotals(report.costs);
+    const entries = Object.entries(totals);
+
+    if (entries.length === 0) {
+      drawEmptyChart(categoryChart, "No category data yet");
+      return;
+    }
+
+    const context = clearCanvas(categoryChart);
+    const centerX = 150;
+    const centerY = 150;
+    const radius = 105;
+    const total = entries.reduce(function(sum, entry) {
+      return sum + entry[1];
+    }, 0);
+    let startAngle = -Math.PI / 2;
+
+    entries.forEach(function(entry, index) {
+      const slice = (entry[1] / total) * Math.PI * 2;
+
+      context.beginPath();
+      context.moveTo(centerX, centerY);
+      context.arc(centerX, centerY, radius, startAngle, startAngle + slice);
+      context.closePath();
+      context.fillStyle = chartColors[index % chartColors.length];
+      context.fill();
+
+      startAngle += slice;
+    });
+
+    context.font = "14px Arial";
+    context.textAlign = "left";
+    context.textBaseline = "middle";
+
+    entries.forEach(function(entry, index) {
+      const x = 305;
+      const y = 70 + index * 28;
+
+      context.fillStyle = chartColors[index % chartColors.length];
+      context.fillRect(x, y - 7, 14, 14);
+      context.fillStyle = "#17202a";
+      context.fillText(entry[0] + " - " + formatMoney(entry[1]), x + 24, y);
+    });
+  }
+
+  function drawYearChart(yearlyReport) {
+    if (yearlyReport.total.sum === 0) {
+      drawEmptyChart(yearChart, "No yearly data yet");
+      return;
+    }
+
+    const context = clearCanvas(yearChart);
+    const maxValue = Math.max.apply(null, yearlyReport.months.map(function(item) {
+      return item.sum;
+    }));
+    const left = 52;
+    const right = 18;
+    const top = 30;
+    const bottom = 54;
+    const chartWidth = yearChart.width - left - right;
+    const chartHeight = yearChart.height - top - bottom;
+    const barGap = 10;
+    const barWidth = (chartWidth - barGap * 11) / 12;
+
+    context.strokeStyle = "#d7dee8";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(left, top);
+    context.lineTo(left, top + chartHeight);
+    context.lineTo(left + chartWidth, top + chartHeight);
+    context.stroke();
+
+    context.fillStyle = "#607080";
+    context.font = "12px Arial";
+    context.textAlign = "right";
+    context.fillText(formatMoney(maxValue), left - 8, top + 4);
+    context.fillText("$0", left - 8, top + chartHeight);
+
+    yearlyReport.months.forEach(function(item, index) {
+      const height = maxValue === 0 ? 0 : (item.sum / maxValue) * chartHeight;
+      const x = left + index * (barWidth + barGap);
+      const y = top + chartHeight - height;
+
+      context.fillStyle = chartColors[index % chartColors.length];
+      context.fillRect(x, y, barWidth, height);
+      context.fillStyle = "#17202a";
+      context.textAlign = "center";
+      context.fillText(monthNames[index], x + barWidth / 2, top + chartHeight + 24);
+    });
+  }
+
+  function renderReports() {
+    const selectedMonth = Number(monthInput.value);
+    const selectedYear = Number(yearInput.value);
+    const selectedBarYear = Number(barYearInput.value);
+    const monthlyReport = database.getReport(selectedYear, selectedMonth);
+    const yearlyReport = database.getYearlyReport(selectedBarYear);
+    const currentReport = database.getReport(today.getFullYear(), today.getMonth() + 1);
+
+    reportSummary.textContent = formatMoney(monthlyReport.total.sum) + " total";
+    yearSummary.textContent = formatMoney(yearlyReport.total.sum) + " total";
+    currentMonthTotal.textContent = formatMoney(currentReport.total.sum);
+
+    renderTable(monthlyReport);
+    drawCategoryChart(monthlyReport);
+    drawYearChart(yearlyReport);
+  }
+
+  costForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    try {
+      database.addCost({
+        sum: document.getElementById("sumInput").value,
+        currency: document.getElementById("currencyInput").value,
+        category: document.getElementById("categoryInput").value,
+        description: document.getElementById("descriptionInput").value
+      });
+
+      costForm.reset();
+      document.getElementById("currencyInput").value = "USD";
+      renderReports();
+      showToast("Cost added");
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+  });
+
+  reportForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    renderReports();
+  });
+
+  yearForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    renderReports();
+  });
+
+  renderReports();
+})();
+  </script>
 </body>
 </html>
