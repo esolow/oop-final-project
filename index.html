@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cost Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">Cost Manager</p>
+      <h1>Track monthly spending</h1>
+    </div>
+    <div class="header-total" aria-live="polite">
+      <span>This month</span>
+      <strong id="currentMonthTotal">$0.00</strong>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="panel add-panel" aria-labelledby="addCostTitle">
+      <div class="panel-heading">
+        <h2 id="addCostTitle">Add Cost</h2>
+      </div>
+
+      <form id="costForm" class="cost-form">
+        <label>
+          <span>Sum</span>
+          <input id="sumInput" name="sum" type="number" min="0.01" step="0.01" required>
+        </label>
+
+        <label>
+          <span>Currency</span>
+          <select id="currencyInput" name="currency" required>
+            <option value="USD" selected>USD</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Category</span>
+          <select id="categoryInput" name="category" required>
+            <option value="Food">Food</option>
+            <option value="Housing">Housing</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Education">Education</option>
+            <option value="Health">Health</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label class="full-width">
+          <span>Description</span>
+          <input id="descriptionInput" name="description" type="text" maxlength="80" required>
+        </label>
+
+        <button type="submit">Add cost</button>
+      </form>
+    </section>
+
+    <section class="panel report-panel" aria-labelledby="reportTitle">
+      <div class="panel-heading report-heading">
+        <div>
+          <h2 id="reportTitle">Monthly Report</h2>
+          <p id="reportSummary">$0.00 total</p>
+        </div>
+        <form id="reportForm" class="report-controls">
+          <label>
+            <span>Month</span>
+            <select id="monthInput" name="month" required>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </label>
+          <label>
+            <span>Year</span>
+            <input id="yearInput" name="year" type="number" min="2000" max="2100" required>
+          </label>
+          <button type="submit">Show</button>
+        </form>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th class="amount-cell">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="costTableBody">
+            <tr>
+              <td colspan="4" class="empty-cell">No costs for this month yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel chart-panel" aria-labelledby="pieTitle">
+      <div class="panel-heading">
+        <h2 id="pieTitle">Categories</h2>
+      </div>
+      <canvas id="categoryChart" width="520" height="320" aria-label="Pie chart by category"></canvas>
+    </section>
+
+    <section class="panel chart-panel" aria-labelledby="barTitle">
+      <div class="panel-heading report-heading">
+        <div>
+          <h2 id="barTitle">Yearly Costs</h2>
+          <p id="yearSummary">$0.00 total</p>
+        </div>
+        <form id="yearForm" class="report-controls compact-controls">
+          <label>
+            <span>Year</span>
+            <input id="barYearInput" name="year" type="number" min="2000" max="2100" required>
+          </label>
+          <button type="submit">Show</button>
+        </form>
+      </div>
+      <canvas id="yearChart" width="720" height="320" aria-label="Bar chart by month"></canvas>
+    </section>
+  </main>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
